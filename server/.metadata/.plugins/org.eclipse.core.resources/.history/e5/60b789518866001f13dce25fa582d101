@@ -1,0 +1,5 @@
+package com.example.flight_data_microservice.model;
+
+public class Flight {
+
+}

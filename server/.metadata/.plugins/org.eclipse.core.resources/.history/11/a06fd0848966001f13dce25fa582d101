@@ -1,0 +1,5 @@
+package com.example.flight_data_microservice.controller;
+
+public class FlightController {
+
+}

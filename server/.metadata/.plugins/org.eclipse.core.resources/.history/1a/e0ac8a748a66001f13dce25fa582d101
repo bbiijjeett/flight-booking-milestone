@@ -1,0 +1,5 @@
+package com.example.payment_microservice.model;
+
+public class Booking {
+
+}

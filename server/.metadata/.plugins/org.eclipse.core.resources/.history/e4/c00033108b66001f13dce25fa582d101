@@ -1,0 +1,55 @@
+package com.example.booking_microservice.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.example.booking_microservice.model.Booking;
+import com.example.booking_microservice.repository.BookingRepository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class BookingService {
+
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Autowired
+    private KafkaTemplate<String, Map<String, Object>> kafkaTemplate;
+
+    private static final String TOPIC = "T1";
+
+    public List<Object> searchBookings(String source, String destination, String date) {
+        // Call Flight Data MS to get flights
+        List flights = restTemplate.getForObject("http://localhost:8081/api/v1/flights?source=" + source + "&destination=" + destination + "&date=" + date, List.class);
+        return flights;
+    }
+
+    public Booking createBooking(Booking booking) {
+        booking.setStatus("initiated");
+        Booking savedBooking = bookingRepository.save(booking);
+
+        // Send message to Kafka Topic
+        Map<String, Object> message = new HashMap<>();
+        message.put("bookingId", savedBooking.getId());
+        message.put("amount", 100.0); // Example amount
+        message.put("paymentMode", "Card");
+
+        kafkaTemplate.send(TOPIC, message);
+        
+        return savedBooking;
+    }
+
+    public Booking updateBookingStatus(Long id, String status) {
+        Booking booking = bookingRepository.findById(id).orElseThrow(() -> new RuntimeException("Booking not found"));
+        booking.setStatus(status);
+        return bookingRepository.save(booking);
+    }
+}
