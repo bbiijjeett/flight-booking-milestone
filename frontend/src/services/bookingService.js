@@ -1,4 +1,8 @@
-import { createBooking, fetchFlights } from "../utils/api";
+import {
+  createBooking,
+  fetchFlights,
+  fetchFlightDetailsById,
+} from "../utils/api";
 
 export const initiateBooking = async (bookingDetails) => {
   try {
@@ -12,7 +16,6 @@ export const initiateBooking = async (bookingDetails) => {
 };
 
 export const processBookingData = (formValues) => {
-  // Example: Transforming or validating data before API call
   const processedData = {
     flightId: formValues.flightId,
     userId: formValues.userId,
@@ -28,6 +31,18 @@ export const getAvailableFlights = async (source, destination, date) => {
     return flights;
   } catch (error) {
     console.error("Error fetching flights:", error);
+    throw error;
+  }
+};
+
+// New function to fetch flight details by ID
+export const fetchFlightDetails = async (flightId) => {
+  try {
+    const response = await fetchFlightDetailsById(flightId);
+    console.log("Fetched flight details:", response);
+    return response;
+  } catch (error) {
+    console.error("Error fetching flight details:", error);
     throw error;
   }
 };

@@ -39,3 +39,10 @@ export const processPayment = async (paymentDetails) => {
     throw error;
   }
 };
+
+export const fetchFlightDetailsById = async (flightId) => {
+  const response = await axios.get(
+    `${API_BASE_URL}:8081/api/v1/flights/${flightId}`
+  );
+  return response.data;
+};

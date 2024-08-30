@@ -1,6 +1,5 @@
 import * as Yup from "yup";
 
-// Validation schema for booking form
 export const bookingValidationSchema = Yup.object().shape({
   source: Yup.string()
     .required("Source is required")
@@ -13,7 +12,6 @@ export const bookingValidationSchema = Yup.object().shape({
     .min(new Date(), "Date cannot be in the past"),
 });
 
-// Validation schema for payment form
 export const paymentValidationSchema = Yup.object().shape({
   cardNumber: Yup.string()
     .required("Card number is required")
